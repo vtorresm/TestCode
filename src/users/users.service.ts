@@ -41,15 +41,13 @@ export class UsersService {
   }
 
   async deleteUser(id: number) {
-    const userFound = await this.userRepository.findOne({
-      where: { id },
-    });
+    const result = await this.userRepository.delete({ id });
 
-    if (!userFound) {
+    if (result.affected === 0) {
       return new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
 
-    return this.userRepository.delete({ id });
+    return result;
   }
 
   updateUser(id: number, user: UpdateUserDto) {
