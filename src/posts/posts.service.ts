@@ -8,7 +8,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 @Injectable()
 export class PostsService {
   constructor(
-    @InjectRepository(Post) private postRepository: Repository<Post>,
+    @InjectRepository(Post) private postsRepository: Repository<Post>,
     private usersService: UsersService,
   ) {}
 
@@ -18,11 +18,13 @@ export class PostsService {
     if (!userFound)
       return new HttpException('User not found', HttpStatus.NOT_FOUND);
 
-    const newPost = this.postRepository.create(post);
-    return this.postRepository.save(newPost);
+    const newPost = this.postsRepository.create(post);
+    return this.postsRepository.save(newPost);
   }
 
   getPosts() {
-    return this.postRepository.find();
+    return this.postsRepository.find({
+      relations: ['author'],
+    });
   }
 }
